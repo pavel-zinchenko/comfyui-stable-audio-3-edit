@@ -163,24 +163,18 @@ class StableAudio3NodeTests(unittest.TestCase):
 
     def test_example_workflows_use_nested_autogrow_socket_names(self):
         workflow_dir = Path(__file__).parents[1] / "example_workflows"
+        workflow = json.loads((workflow_dir / "stable_audio_3_inpaint_outpaint.json").read_text(encoding="utf-8"))
+        node = next(node for node in workflow["nodes"] if node["type"] == "StableAudio3InpaintConditioning")
+        input_names = [input["name"] for input in node["inputs"]]
+        region_input = next(input for input in node["inputs"] if input["name"] == "regions.region_0")
+        region_link = next(link for link in workflow["links"] if link[0] == region_input["link"])
 
-        for name in ("stable_audio_3_inpaint.json", "stable_audio_3_continuation.json"):
-            with self.subTest(workflow=name):
-                workflow = json.loads((workflow_dir / name).read_text(encoding="utf-8"))
-                node = next(node for node in workflow["nodes"] if node["type"] == "StableAudio3InpaintConditioning")
-                trim_node = next(node for node in workflow["nodes"] if node["type"] == "TrimAudioDuration")
-                input_names = [input["name"] for input in node["inputs"]]
-                region_link = next(link for link in workflow["links"] if link[0] == 8)
-                duration_link = next(link for link in workflow["links"] if link[0] == 16)
-
-                self.assertEqual(input_names[4:6], ["regions.region_0", "regions.region_1"])
-                self.assertNotIn("region_0", input_names)
-                self.assertNotIn("seconds_total", input_names)
-                self.assertEqual(node["widgets_values"], [True])
-                self.assertEqual(region_link[4], 4)
-                self.assertEqual(node["outputs"][3]["name"], "duration")
-                self.assertEqual(next(input for input in trim_node["inputs"] if input["name"] == "duration")["link"], 16)
-                self.assertEqual(duration_link[1:5], [7, 3, 10, 2])
+        self.assertEqual(input_names[4:6], ["regions.region_0", "regions.region_1"])
+        self.assertNotIn("region_0", input_names)
+        self.assertNotIn("seconds_total", input_names)
+        self.assertEqual(node["widgets_values"], [True])
+        self.assertEqual(region_link[3:5], [node["id"], 4])
+        self.assertEqual(node["outputs"][3]["name"], "duration")
 
     def test_inpaint_requires_a_region(self):
         vae = FakeVAE()
