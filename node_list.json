@@ -1,0 +1,5 @@
+{
+  "StableAudio3AudioToAudio": "Prepares source audio for Stable Audio 3 audio-to-audio generation.",
+  "StableAudio3InpaintRegion": "Defines a time region for Stable Audio 3 inpainting.",
+  "StableAudio3InpaintConditioning": "Prepares Stable Audio 3 inpainting and continuation conditioning."
+}

@@ -1,0 +1,15 @@
+[project]
+name = "stable-audio-3-edit"
+version = "1.0.0"
+description = "Audio-to-audio, inpainting, and continuation nodes for Stable Audio 3 in ComfyUI."
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/pavel-zinchenko/comfyui-stable-audio-3-edit"
+
+[tool.comfy]
+PublisherId = "pavel-zinchenko"
+DisplayName = "Stable Audio 3 Editing"
+requires-comfyui = ">=0.33.0"
